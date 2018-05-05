@@ -1,56 +1,29 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"os"
 
-	"github.com/pkg/errors"
-	"github.com/romanyx/mdopen"
-	"gopkg.in/urfave/cli.v1"
+	"github.com/mdwhatcott/mdopen"
 )
 
 func main() {
-	app := cli.NewApp()
-	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:  "t",
-			Value: "github",
-			Usage: "Set template",
-		},
+	flag.Usage = func() {
+		fmt.Println("Usage: mdopen <files>")
+		flag.PrintDefaults()
 	}
-	app.Name = "mdopen"
-	app.Usage = "View markdown files in default browser"
-	app.Action = func(c *cli.Context) error {
-		var filenames []string
-		if c.NArg() > 0 {
-			filenames = c.Args()
+	flag.Parse()
+	opener := mdopen.New(mdopen.GithubTemplate())
+	for _, path := range flag.Args() {
+		file, err := os.Open(path)
+		if err != nil {
+			log.Fatal(err, "failed to open file")
 		}
 
-		options := []mdopen.Option{
-			templateOption(c.String("t")),
+		if err := opener.Open(file); err != nil {
+			log.Fatal(err, "open markdown failed")
 		}
-
-		opnr := mdopen.New(options...)
-		for _, fName := range filenames {
-			f, err := os.Open(fName)
-			if err != nil {
-				return errors.Wrap(err, "failed to open file")
-			}
-
-			if err := opnr.Open(f); err != nil {
-				return errors.Wrap(err, "open markdown failed")
-			}
-		}
-
-		return nil
 	}
-
-	err := app.Run(os.Args)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func templateOption(t string) mdopen.Option {
-	return mdopen.GithubTemplate()
 }

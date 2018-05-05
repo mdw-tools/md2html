@@ -1,12 +1,8 @@
-[![GoDoc](https://godoc.org/gopkg.in/romanyx/mdopen.v1?status.svg)](https://godoc.org/gopkg.in/romanyx/mdopen.v1)
-[![Build Status](https://travis-ci.org/romanyx/mdopen.png)](https://travis-ci.org/romanyx/mdopen)
-[![Go Report Card](https://goreportcard.com/badge/github.com/romanyx/mdopen)](https://goreportcard.com/report/github.com/romanyx/mdopen)
-
 # mdopen
 
-Allows to view markdown files in the default browser. For more details, see the API [documentation](https://godoc.org/gopkg.in/romanyx/mdopen.v1).
+Allows to view markdown files in the default browser. For more details, see the API [documentation](https://godoc.org/github.com/mdwhatcott/mdopen).
 
-## CLI usage
+## CLI
 
 Install:
 
@@ -26,33 +22,25 @@ View it in the default browser as html:
 mdopen hello.md
 ```
 
-You will see:
-
-![Example](https://monosnap.com/image/1erjc9khEuyB3fHSr1qQaJE5BYhzPC.png)
-
-## API usage
+## Library
 
 Install:
 
 ```bash
-go get gopkg.in/romanyx/mdopen.v1
+go get github.com/mdwhatcott/mdopen
 ```
 
 ``` go
 package main
 
-import "gopkg.in/romanyx/mdopen.v1"
+import "github.com/mdwhatcott/mdopen"
 
 func main() {
     f := strings.NewReader("# Hello from markdown")
 
-    opnr := mdopen.New()
-    if err := opnr.Open(f); err != nil {
+    opener := mdopen.New()
+    if err := opener.Open(f); err != nil {
         log.Fatal(err)
     }
 }
 ```
-
-## Contributing
-
-Please feel free to submit issues, fork the repository and send pull requests!

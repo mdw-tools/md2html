@@ -9,26 +9,24 @@ import (
 	"os/exec"
 	"runtime"
 
+	"github.com/mdwhatcott/mdopen/internal/templates/github"
 	"github.com/pkg/errors"
-	"github.com/romanyx/mdopen/internal/templates/github"
 	"github.com/tink-ab/tempfile"
-	blackfriday "gopkg.in/russross/blackfriday.v2"
+	"gopkg.in/russross/blackfriday.v2"
 )
 
 // Option for initializer.
 type Option func(*Opener)
 
-// GithubTemplate option sets layout as
-// github.com template.
+// GithubTemplate option sets layout as github.com template.
 func GithubTemplate() Option {
-	return func(opnr *Opener) {
-		opnr.layout = template.Must(template.New("layout").Parse(github.Template))
+	return func(opener *Opener) {
+		opener.layout = template.Must(template.New("layout").Parse(github.Template))
 	}
 }
 
-// Opener holds layout and command name
-// to open default browser. Use New function
-// to initialize corrent one.
+// Opener holds layout and command name to open default browser.
+// Use New function to initialize correct one.
 type Opener struct {
 	cmdName string
 	layout  *template.Template
@@ -36,34 +34,33 @@ type Opener struct {
 
 // New returns initialized Opener.
 func New(options ...Option) *Opener {
-	opnr := Opener{
-		cmdName: cmdName(),
+	opener := Opener{
+		cmdName: commandName(),
 		layout:  template.Must(template.New("layout").Parse(github.Template)),
 	}
 
 	for _, option := range options {
-		option(&opnr)
+		option(&opener)
 	}
 
-	return &opnr
+	return &opener
 }
 
-// Open will create a tmp file, execute layout
-// template with given markdown into it and then
-// open it in browser.
-func (opnr *Opener) Open(f io.Reader) error {
+// Open will create a tmp file, execute layout template with
+// given markdown into it and then open it in browser.
+func (this *Opener) Open(f io.Reader) error {
 	tmpfile, err := tmpFile()
 	if err != nil {
 		return errors.Wrap(err, "tempfile creation failed")
 	}
 	defer tmpfile.Close()
 
-	if err := opnr.prepareFile(tmpfile, f); err != nil {
+	if err := this.prepareFile(tmpfile, f); err != nil {
 		return errors.Wrap(err, "tmp file perpare")
 	}
 
 	url := fmt.Sprintf("file:///%s", tmpfile.Name())
-	cmd := exec.Command(opnr.cmdName, url)
+	cmd := exec.Command(this.cmdName, url)
 	if err := cmd.Run(); err != nil {
 		return errors.Wrap(err, "open letter in the browser failed")
 	}
@@ -71,7 +68,7 @@ func (opnr *Opener) Open(f io.Reader) error {
 	return nil
 }
 
-func (opnr *Opener) prepareFile(w io.Writer, f io.Reader) error {
+func (this *Opener) prepareFile(w io.Writer, f io.Reader) error {
 	data, err := ioutil.ReadAll(f)
 	if err != nil {
 		return errors.Wrap(err, "read file failed")
@@ -83,7 +80,7 @@ func (opnr *Opener) prepareFile(w io.Writer, f io.Reader) error {
 		Body: template.HTML(blackfriday.Run(data)),
 	}
 
-	if err := opnr.layout.Execute(w, templateData); err != nil {
+	if err := this.layout.Execute(w, templateData); err != nil {
 		return errors.Wrap(err, "template execution failed")
 	}
 
@@ -99,7 +96,7 @@ func tmpFile() (*os.File, error) {
 	return tmpfile, nil
 }
 
-func cmdName() string {
+func commandName() string {
 	switch runtime.GOOS {
 	case "darwin":
 		return "open"

@@ -9,23 +9,21 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/romanyx/mdopen/internal/templates/github"
+	"github.com/mdwhatcott/mdopen/internal/templates/github"
 )
 
-const (
-	md = `# test`
-)
+const md = `# test`
 
-func TestOpeneterOpen(t *testing.T) {
+func TestOpenerOpen(t *testing.T) {
 	f := strings.NewReader(md)
-	opnr := New(echoCMD())
-	if err := opnr.Open(f); err != nil {
+	opener := New(echoCMD())
+	if err := opener.Open(f); err != nil {
 		t.Fatalf("unexpected error: %s", err)
 	}
 }
 
 func TestOpener_prepareFile(t *testing.T) {
-	opnr := New()
+	opener := New()
 
 	tests := []struct {
 		name     string
@@ -41,7 +39,7 @@ func TestOpener_prepareFile(t *testing.T) {
 		},
 		{
 			name:    "with error",
-			r:       new(erroredReader),
+			r:       new(failingReader),
 			wantErr: true,
 		},
 	}
@@ -50,7 +48,7 @@ func TestOpener_prepareFile(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			w := new(bytes.Buffer)
 
-			err := opnr.prepareFile(w, tt.r)
+			err := opener.prepareFile(w, tt.r)
 			if tt.wantErr && err == nil {
 				t.Errorf("expected error")
 				return
@@ -63,7 +61,7 @@ func TestOpener_prepareFile(t *testing.T) {
 
 			if !strings.Contains(w.String(), tt.contains) {
 				t.Errorf("body does not contains expected string: %s", tt.contains)
-				if err := opnr.Open(tt.r); err != nil {
+				if err := opener.Open(tt.r); err != nil {
 					t.Error(err)
 				}
 			}
@@ -86,7 +84,7 @@ func TestNew(t *testing.T) {
 				options: []Option{},
 			},
 			want: &Opener{
-				cmdName: cmdName(),
+				cmdName: commandName(),
 				layout:  template.Must(template.New("layout").Parse(github.Template)),
 			},
 		},
@@ -98,7 +96,7 @@ func TestNew(t *testing.T) {
 				},
 			},
 			want: &Opener{
-				cmdName: cmdName(),
+				cmdName: commandName(),
 				layout:  template.Must(template.New("layout").Parse(github.Template)),
 			},
 		},
@@ -112,14 +110,14 @@ func TestNew(t *testing.T) {
 	}
 }
 
-type erroredReader struct{}
+type failingReader struct{}
 
-func (r *erroredReader) Read(p []byte) (n int, err error) {
+func (r *failingReader) Read(p []byte) (n int, err error) {
 	return 0, errors.New("unexpected EOF")
 }
 
 func echoCMD() Option {
-	return func(opnr *Opener) {
-		opnr.cmdName = "echo"
+	return func(opener *Opener) {
+		opener.cmdName = "echo"
 	}
 }
