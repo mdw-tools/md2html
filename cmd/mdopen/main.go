@@ -16,6 +16,11 @@ func main() {
 	}
 	flag.Parse()
 	opener := mdopen.New(mdopen.GithubTemplate())
+	if len(flag.Args()) == 0 {
+		if err := opener.Open(os.Stdin); err != nil {
+			log.Fatal(err, "open markdown from stdin failed")
+		}
+	}
 	for _, path := range flag.Args() {
 		file, err := os.Open(path)
 		if err != nil {
