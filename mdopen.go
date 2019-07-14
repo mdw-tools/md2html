@@ -9,10 +9,11 @@ import (
 	"os/exec"
 	"runtime"
 
-	"github.com/mdwhatcott/mdopen/internal/templates/github"
 	"github.com/pkg/errors"
+	"github.com/russross/blackfriday"
 	"github.com/tink-ab/tempfile"
-	"gopkg.in/russross/blackfriday.v2"
+
+	"github.com/mdwhatcott/mdopen/internal/templates/github"
 )
 
 // Option for initializer.
