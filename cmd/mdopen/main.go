@@ -15,7 +15,7 @@ func main() {
 		flag.PrintDefaults()
 	}
 	flag.Parse()
-	opener := mdopen.New(mdopen.GithubTemplate())
+	opener := mdopen.New(mdopen.ParseTemplate())
 	if len(flag.Args()) == 0 {
 		if err := opener.Open(os.Stdin); err != nil {
 			log.Fatal(err, "open markdown from stdin failed")

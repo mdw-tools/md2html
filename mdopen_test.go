@@ -8,8 +8,6 @@ import (
 	"reflect"
 	"strings"
 	"testing"
-
-	"github.com/mdwhatcott/mdopen/internal/templates/github"
 )
 
 const md = `# test`
@@ -85,19 +83,19 @@ func TestNew(t *testing.T) {
 			},
 			want: &Opener{
 				cmdName: commandName(),
-				layout:  template.Must(template.New("layout").Parse(github.Template)),
+				layout:  template.Must(template.New("layout").Parse(Template)),
 			},
 		},
 		{
 			name: "github",
 			args: args{
 				options: []Option{
-					GithubTemplate(),
+					ParseTemplate(),
 				},
 			},
 			want: &Opener{
 				cmdName: commandName(),
-				layout:  template.Must(template.New("layout").Parse(github.Template)),
+				layout:  template.Must(template.New("layout").Parse(Template)),
 			},
 		},
 	}

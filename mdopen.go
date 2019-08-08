@@ -7,22 +7,21 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/russross/blackfriday"
-	"github.com/tink-ab/tempfile"
-
-	"github.com/mdwhatcott/mdopen/internal/templates/github"
 )
 
 // Option for initializer.
 type Option func(*Opener)
 
-// GithubTemplate option sets layout as github.com template.
-func GithubTemplate() Option {
+// ParseTemplate option sets layout as github.com template.
+func ParseTemplate() Option {
 	return func(opener *Opener) {
-		opener.layout = template.Must(template.New("layout").Parse(github.Template))
+		opener.layout = template.Must(template.New("layout").Parse(Template))
 	}
 }
 
@@ -37,7 +36,7 @@ type Opener struct {
 func New(options ...Option) *Opener {
 	opener := Opener{
 		cmdName: commandName(),
-		layout:  template.Must(template.New("layout").Parse(github.Template)),
+		layout:  template.Must(template.New("layout").Parse(Template)),
 	}
 
 	for _, option := range options {
@@ -89,7 +88,8 @@ func (this *Opener) prepareFile(w io.Writer, f io.Reader) error {
 }
 
 func tmpFile() (*os.File, error) {
-	tmpfile, err := tempfile.TempFile("", "mdopen", ".html")
+	path := filepath.Join(os.TempDir(), fmt.Sprintf("mdopen-%d.html", time.Now().Unix()))
+	tmpfile, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_EXCL, 0600)
 	if err != nil {
 		return tmpfile, err
 	}
