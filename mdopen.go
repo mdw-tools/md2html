@@ -74,9 +74,7 @@ func (this *Opener) prepareFile(w io.Writer, f io.Reader) error {
 		return errors.Wrap(err, "read file failed")
 	}
 
-	templateData := struct {
-		Body template.HTML
-	}{
+	templateData := struct{ Body template.HTML }{
 		Body: template.HTML(blackfriday.Run(data)),
 	}
 
