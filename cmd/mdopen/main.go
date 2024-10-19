@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/mdwhatcott/mdopen"
+	"github.com/mdw-tools/mdopen"
 )
 
 func main() {

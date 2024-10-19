@@ -1,4 +1,4 @@
-module github.com/mdwhatcott/mdopen
+module github.com/mdw-tools/mdopen
 
 go 1.12
 

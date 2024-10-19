@@ -1,6 +1,6 @@
 # mdopen
 
-Allows to view markdown files in the default browser. For more details, see the API [documentation](https://godoc.org/github.com/mdwhatcott/mdopen).
+Allows to view markdown files in the default browser. For more details, see the API [documentation](https://godoc.org/github.com/mdw-tools/mdopen).
 
 ## CLI
 
@@ -27,13 +27,13 @@ mdopen hello.md
 Install:
 
 ```bash
-go get github.com/mdwhatcott/mdopen
+go get github.com/mdw-tools/mdopen
 ```
 
 ``` go
 package main
 
-import "github.com/mdwhatcott/mdopen"
+import "github.com/mdw-tools/mdopen"
 
 func main() {
     f := strings.NewReader("# Hello from markdown")

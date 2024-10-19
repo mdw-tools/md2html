@@ -2,4 +2,4 @@ test:
 	go test --race ./...
 
 install: test
-	go install github.com/mdwhatcott/mdopen/cmd/mdopen
+	go install github.com/mdw-tools/mdopen/cmd/mdopen
