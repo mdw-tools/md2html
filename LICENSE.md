@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) 2018 romanyx, mdw-tools
+Copyright (c) 2025 Michael Whatcott
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

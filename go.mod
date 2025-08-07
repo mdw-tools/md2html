@@ -1,9 +1,5 @@
-module github.com/mdw-tools/mdopen
+module github.com/mdw-tools/md2html
 
-go 1.12
+go 1.24
 
-require (
-	github.com/pkg/errors v0.8.1
-	github.com/russross/blackfriday v2.0.0+incompatible
-	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
-)
+require github.com/yuin/goldmark v1.7.13
