@@ -8,7 +8,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
@@ -45,12 +44,5 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Printf(strings.TrimSpace(`
-<html>
-<head>
-</head>
-<body>
-%s
-</body>
-</html>`), strings.TrimSpace(HTML.String()))
+	fmt.Printf("<html>\n<head></head>\n<body>\n%s\n</body>\n</html>", HTML.String())
 }
